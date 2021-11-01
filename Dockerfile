@@ -16,7 +16,6 @@ COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
 ENV CSV_FILE prayers-timetable.csv
-ENV CRONJOB_COMMENT "Prayer times scheduler"
 
 COPY . .
 
