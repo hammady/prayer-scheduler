@@ -4,6 +4,8 @@ from csv import DictReader
 from os import environ
 from datetime import datetime, timedelta
 from crontab import CronTab
+from dotenv import load_dotenv
+
 
 def get_today_prayers(file_name):
     # get today's prayer times
@@ -72,6 +74,8 @@ def add_cron_jobs(cron, prayer_times, before_command, after_command):
             add_cron_job_with_time_diff(cron, time, 40, f'{after_command} {prayer}')
 
 def main():
+    # load environment variables from .env file
+    load_dotenv()
     # read csv file
     file_name = environ['CSV_FILE']
     # get prayer times for today

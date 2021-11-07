@@ -15,8 +15,6 @@ WORKDIR /home/${CRON_USER}
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
-ENV CSV_FILE prayers-timetable.csv
-
 COPY . .
 
 ENTRYPOINT ["./docker-entrypoint.sh", "/home/prayertimes/app.py"]

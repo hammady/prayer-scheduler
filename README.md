@@ -18,6 +18,8 @@ docker build . -t prayer-scheduler:1
 
 ## Configure
 
+Environment variables can be stored in `.env` which will be loaded automatically.
+
 1. `CSV_FILE` environment variable: Path of CSV file to load, default: `prayers-timetable.csv`
 1. The CSV above should have the following column names in the header: 
     1. Fajr Iqaamah 1
