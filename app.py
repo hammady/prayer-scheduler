@@ -94,9 +94,9 @@ def main():
         before_command=before_command, after_command=after_command
     )
 
-    # add a final crontab at 1:00 AM to run this script again
-    job = cron.new(command=__file__)
-    job.hour.on(1)
+    # add a final crontab at 3:00 AM to run this script again
+    job = cron.new(command="cd /home/prayertimes && /usr/local/bin/python ./app.py")
+    job.hour.on(3)
     job.minute.on(0)
 
     # write cron to disk
