@@ -20,13 +20,19 @@ docker build . -t prayer-scheduler:1
 
 Environment variables can be stored in `.env` which will be loaded automatically.
 
-1. `CSV_FILE` environment variable: Path of CSV file to load, default: `prayers-timetable.csv`
-1. The CSV above should have the following column names in the header: 
+1. `FULL_CSV_FILE` environment variable: Path of main CSV file to load, default: `prayers-timetable.csv`
+1. The CSV above should have all year timetable as rows, with the following column names in the header:
     1. Fajr Iqaamah 1
     1. Zhuhr Iqaamah
     1. 'Asr Iqaamah
     1. Maghrib
     1. Ishaa Iqaamah 1
+1. `THRESHOLDS_CSV_FILE` environment variable: Path of thresholds CSV file to load, default: `thresholds.csv`
+1. The CSV above should have all prayers as rows, with the following column names in the header:
+    1. prayer (fajr, dhuhr, asr, maghrib, ishaa, jumaa1, jumaa2, ...)
+    1. before (minutes before the iqama time of the prayer to trigger the before hooks)
+    1. after (minutes after the iqama time of the prayer to trigger the after hooks)
+    1. jumaa (if the prayer is juma'a, the jumaa time)
 1. Time zone is set to `Canada/Eastern`, can be overriden from the `Dockerfile`
 1. Jumaa prayers schedule can be changed in `add_jumaah` function in `app.py` 
 

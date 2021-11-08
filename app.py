@@ -34,12 +34,26 @@ def extract_prayer_times(prayer_times):
         'isha': parse_time(prayer_times['Ishaa Iqaamah 1'])
     }
 
-def add_jumaah(prayer_times):
+def get_thresholds(file_name):
+    # get thresholds from csv file
+    ret = dict()
+    with open(file_name, 'r') as csv_file:
+        csv_reader = DictReader(csv_file)
+        for row in csv_reader:
+            ret[row['prayer']] = {
+                'before': int(row['before']) if row['before'] else None,
+                'after': int(row['after']) if row['after'] else None,
+                'jumaa': parse_time(row['jumaa']) if row['jumaa'] else None
+            }
+    return ret
+
+def add_jumaah(prayer_times, thresholds):
     if datetime.now().weekday() == 4:
         del prayer_times['dhuhr']
-        prayer_times['jumaa1'] = parse_time('1:30 PM')
-        prayer_times['jumaa2'] = parse_time('2:30 PM')
-        prayer_times['jumaa3'] = parse_time('3:15 PM')
+        for jumaa in ['jumaa1', 'jumaa2', 'jumaa3', 'jumaa4', 'jumaa5']:
+            row = thresholds.get(jumaa)
+            if row:
+                prayer_times[jumaa] = row['jumaa']
 
 def print_prayer_times(prayer_times):
     for prayer, time in prayer_times.items():
@@ -53,7 +67,7 @@ def init_cron():
     after_command = f'/home/{cron_user}/run-hooks.sh after'
     return (cron, before_command, after_command)
 
-def add_cron_jobs(cron, prayer_times, before_command, after_command):
+def add_cron_jobs(cron, prayer_times, thresholds, before_command, after_command):
     
     def add_cron_job_with_time_diff(cron, time, time_diff, command):
         time += timedelta(minutes=time_diff)
@@ -62,35 +76,34 @@ def add_cron_jobs(cron, prayer_times, before_command, after_command):
         job.minute.on(time.minute)
 
     for prayer, time in prayer_times.items():
-        # before
-        if prayer == 'maghrib' or prayer.startswith('jumaa'):
-            timediff = -5
-        else:
-            timediff = -20
-        add_cron_job_with_time_diff(cron, time, timediff, f'{before_command} {prayer}')
-
-        # after
-        if prayer != 'jumaa1' and prayer != 'jumaa2':
-            add_cron_job_with_time_diff(cron, time, 40, f'{after_command} {prayer}')
+        timediff = thresholds[prayer].get('before', None)
+        if timediff:
+            add_cron_job_with_time_diff(cron, time, timediff, f'{before_command} {prayer}')
+        timediff = thresholds[prayer].get('after', None)
+        if timediff:
+            add_cron_job_with_time_diff(cron, time, timediff, f'{after_command} {prayer}')
 
 def main():
     # load environment variables from .env file
     load_dotenv()
-    # read csv file
-    file_name = environ['CSV_FILE']
+    # read full csv file
+    file_name = environ['FULL_CSV_FILE']
     # get prayer times for today
     prayers_row = get_today_prayers(file_name)
     # extract prayer times
     prayer_times = extract_prayer_times(prayers_row)
+    # read before/after thresholds
+    file_name = environ['THRESHOLDS_CSV_FILE']
+    thresholds = get_thresholds(file_name)
     # add Jumaah (in case today is Friday)
-    add_jumaah(prayer_times)
+    add_jumaah(prayer_times, thresholds)
     # print prayer times
     print_prayer_times(prayer_times)
 
     cron, before_command, after_command = init_cron()
     # add prayer times to cron
     add_cron_jobs(
-        cron=cron, prayer_times=prayer_times,
+        cron=cron, prayer_times=prayer_times, thresholds=thresholds,
         before_command=before_command, after_command=after_command
     )
 
@@ -101,5 +114,9 @@ def main():
 
     # write cron to disk
     cron.write()
+
+    # print all cron jobs
+    for job in cron:
+        print(job)
 
 main()
