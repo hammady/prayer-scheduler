@@ -1,11 +1,9 @@
 # prayer-schedule
 
 Run arbitrary scripts based on prayer times loaded from CSV file.
-All scripts located in `before-hooks.d` will be executed before the prayer
-Iqama times by 20 minutes (5 minutes for Maghrib and Juma'as).
-All scripts located in `after-hooks.d` will be executed after the prayer
-Iqama times by 40 minutes. This applies also to the final Juma'a, but not the
-eariler ones.
+All scripts located in `before-hooks.d`/`after-hooks.d` will be executed
+before/after the prayer Iqama times by a configurable threshold.
+Thresholds are configured in a sepparate CSV file.
 
 The current hooks set the stream title located in the mounted volume on the host.
 They also switch the mic on (in the before hook) and off (in the after hook).
@@ -34,7 +32,6 @@ Environment variables can be stored in `.env` which will be loaded automatically
     1. after (minutes after the iqama time of the prayer to trigger the after hooks)
     1. jumaa (if the prayer is juma'a, the jumaa time)
 1. Time zone is set to `Canada/Eastern`, can be overriden from the `Dockerfile`
-1. Jumaa prayers schedule can be changed in `add_jumaah` function in `app.py` 
 
 ## Run
 
