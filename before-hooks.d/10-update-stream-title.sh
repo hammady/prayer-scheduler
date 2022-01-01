@@ -30,13 +30,19 @@ case $prayer_name in
     replace_file_contents "Masjid Live - Isha Athan and Prayer"
     ;;
   jumaa1)
-    replace_file_contents "Masjid Live - Jumaa 1st Athan, Khutba and Prayer, next at 1:15"
+    replace_file_contents "Masjid Live - Jumaa 1st Athan, Khutba and Prayer"
     ;;
   jumaa2)
-    replace_file_contents "Masjid Live - Jumaa 2nd Athan, Khutba and Prayer, next at 2:00"
+    replace_file_contents "Masjid Live - Jumaa 2nd Athan, Khutba and Prayer"
     ;;
   jumaa3)
-    replace_file_contents "Masjid Live - Jumaa 3rd and Final Athan, Khutba and Prayer"
+    replace_file_contents "Masjid Live - Jumaa 3rd Athan, Khutba and Prayer"
+    ;;
+  jumaa4)
+    replace_file_contents "Masjid Live - Jumaa 4th Athan, Khutba and Prayer"
+    ;;
+  jumaa5)
+    replace_file_contents "Masjid Live - Jumaa 5th Athan, Khutba and Prayer"
     ;;
   *)
     replace_file_contents "Masjid Live - General"
