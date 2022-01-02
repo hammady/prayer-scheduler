@@ -1,4 +1,4 @@
-# prayer-schedule
+# prayer-scheduler
 
 Run arbitrary scripts based on prayer times loaded from CSV file.
 All scripts located in `before-hooks.d`/`after-hooks.d` will be executed
