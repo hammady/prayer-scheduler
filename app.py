@@ -3,22 +3,28 @@
 from csv import DictReader
 from os import environ
 from datetime import datetime, timedelta
+from urllib.request import urlopen
 from crontab import CronTab
 from dotenv import load_dotenv
 
+
+def read_csv_data(file_name):
+    print(f'Reading CSV file at: {file_name}')
+    csv_data = urlopen(file_name).readlines()
+    csv_data = [line.decode('utf-8') for line in csv_data]
+    csv_reader = DictReader(csv_data)
+    return csv_reader
 
 def get_today_prayers(file_name):
     # get today's prayer times
     today = datetime.now()
     today_str = today.strftime('%m/%d/%Y')
-    with open(file_name, 'r') as csv_file:
-        csv_reader = DictReader(csv_file)
-        for row in csv_reader:
-            row_date = datetime.strptime(row['Date'], '%m/%d/%Y')
-            row_date_str = row_date.strftime('%m/%d/%Y')
-            if row_date_str == today_str:
-                return row
-        raise Exception(f'No prayer times found for {today_str}')
+    for row in read_csv_data(file_name):
+        row_date = datetime.strptime(row['Date'], '%m/%d/%Y')
+        row_date_str = row_date.strftime('%m/%d/%Y')
+        if row_date_str == today_str:
+            return row
+    raise Exception(f'No prayer times found for {today_str}')
 
 def parse_time(time_str):
     # parse prayer time string to datetime object
@@ -37,14 +43,12 @@ def extract_prayer_times(prayer_times):
 def get_thresholds(file_name):
     # get thresholds from csv file
     ret = dict()
-    with open(file_name, 'r') as csv_file:
-        csv_reader = DictReader(csv_file)
-        for row in csv_reader:
-            ret[row['prayer']] = {
-                'before': int(row['before']) if row['before'] else None,
-                'after': int(row['after']) if row['after'] else None,
-                'jumaa': parse_time(row['jumaa']) if row['jumaa'] else None
-            }
+    for row in read_csv_data(file_name):
+        ret[row['prayer']] = {
+            'before': int(row['before']) if row['before'] else None,
+            'after': int(row['after']) if row['after'] else None,
+            'jumaa': parse_time(row['jumaa']) if row['jumaa'] else None
+        }
     return ret
 
 def add_jumaah(prayer_times, thresholds):
@@ -87,13 +91,13 @@ def main():
     # load environment variables from .env file
     load_dotenv()
     # read full csv file
-    file_name = environ['FULL_CSV_FILE']
+    file_name = environ['FULL_CSV_URL']
     # get prayer times for today
     prayers_row = get_today_prayers(file_name)
     # extract prayer times
     prayer_times = extract_prayer_times(prayers_row)
     # read before/after thresholds
-    file_name = environ['THRESHOLDS_CSV_FILE']
+    file_name = environ['THRESHOLDS_CSV_URL']
     thresholds = get_thresholds(file_name)
     # add Jumaah (in case today is Friday)
     add_jumaah(prayer_times, thresholds)

@@ -18,14 +18,16 @@ docker build . -t prayer-scheduler:1
 
 Environment variables can be stored in `.env` which will be loaded automatically.
 
-1. `FULL_CSV_FILE` environment variable: Path of main CSV file to load, default: `prayers-timetable.csv`
+1. `FULL_CSV_URL` environment variable: File path (file://) or URL (https://) of main CSV file to load,
+default: `file:///home/prayertimes/prayers-timetable.csv`
 1. The CSV above should have all year timetable as rows, with the following column names in the header:
     1. Fajr Iqaamah 1
     1. Zhuhr Iqaamah
     1. 'Asr Iqaamah
     1. Maghrib
     1. Ishaa Iqaamah 1
-1. `THRESHOLDS_CSV_FILE` environment variable: Path of thresholds CSV file to load, default: `thresholds.csv`
+1. `THRESHOLDS_CSV_URL` environment variable: File path (file://) or URL (https://)  of thresholds CSV file to load,
+default: `file:///home/prayertimes/thresholds.csv`
 1. The CSV above should have all prayers as rows, with the following column names in the header:
     1. prayer (fajr, dhuhr, asr, maghrib, ishaa, jumaa1, jumaa2, ...)
     1. before (minutes before the iqama time of the prayer to trigger the before hooks)
