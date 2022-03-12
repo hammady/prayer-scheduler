@@ -6,4 +6,4 @@ sleep 1
 sleep 1
 echo "Disconnecting any streams"
 /usr/local/bin/butt-client -a 192.168.1.73 -d
-
+sleep 1

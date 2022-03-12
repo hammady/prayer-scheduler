@@ -5,6 +5,7 @@ echo "Setting stream title for prayer: $prayer_name"
 
 function butt_command() {
   /usr/local/bin/butt-client -a 192.168.1.73 -u "$1"
+  sleep 1
 }
 
 case $prayer_name in
