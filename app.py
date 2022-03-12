@@ -116,6 +116,9 @@ def main():
     job.hour.on(3)
     job.minute.on(0)
 
+    # add a cron job that runs every minute to allow health checks
+    cron.new(command="touch /tmp/healthz")
+
     # write cron to disk
     cron.write()
 

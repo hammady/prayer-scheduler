@@ -34,4 +34,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
+HEALTHCHECK --interval=20s --timeout=3s --start-period=60s --retries=6 CMD [ "/home/prayertimes/healthz.sh" ]
+
 ENTRYPOINT ["./docker-entrypoint.sh", "/home/prayertimes/app.py"]
