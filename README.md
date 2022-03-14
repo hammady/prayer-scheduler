@@ -4,9 +4,11 @@ Run arbitrary scripts based on prayer times loaded from CSV file.
 All scripts located in `before-hooks.d`/`after-hooks.d` will be executed
 before/after the prayer Iqama times by a configurable threshold.
 Thresholds are configured in a sepparate CSV file.
+For any common configuration for the hooks, create scripts as necessary
+in the `hooks-config.d` directory. These will be sourced by the application.
 
-The current hooks set the stream title located in the mounted volume on the host.
-They also switch the mic on (in the before hook) and off (in the after hook).
+The current hooks send BUTT commands to set the stream title.
+They also enable stream signal detection (in the before hook) and disable it (in the after hook).
 
 ## Build
 
@@ -40,7 +42,12 @@ default: `file:///home/prayertimes/thresholds.csv`
 ```bash
 docker run -d \
     --name=prayer-scheduler \
-    -v c:/Users/User/Documents/butt:/stream-config \
     --restart always \
     prayer-scheduler:1
 ```
+
+## Health Check
+
+The Dockerfile contains a health check that will run every 20 seconds and will
+exit with a non-zero exit code if the minutely cron job has not been run for
+the last 5 minutes, which denotes the cron scheduler is malfunctioning.
