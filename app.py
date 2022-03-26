@@ -54,7 +54,7 @@ def get_thresholds(file_name):
 def add_jumaah(prayer_times, thresholds):
     if datetime.now().weekday() == 4:
         del prayer_times['dhuhr']
-        for jumaa in ['jumaa1', 'jumaa2', 'jumaa3', 'jumaa4', 'jumaa5']:
+        for jumaa in ['jumaa1', 'jumaa2', 'jumaa3', 'jumaa4', 'jumaa5', 'jumaa6']:
             row = thresholds.get(jumaa)
             if row:
                 prayer_times[jumaa] = row['jumaa']

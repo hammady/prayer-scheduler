@@ -34,6 +34,9 @@ case $prayer_name in
   jumaa5)
     butt_command -u "Masjid Live - Jumaa 5th Athan, Khutba and Prayer"
     ;;
+  jumaa6)
+    butt_command -u "Masjid Live - Jumaa 6th Athan, Khutba and Prayer"
+    ;;
   *)
     butt_command -u "Masjid Live - General"
     ;;
