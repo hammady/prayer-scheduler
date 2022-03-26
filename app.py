@@ -15,38 +15,38 @@ def read_csv_data(file_name):
     csv_reader = DictReader(csv_data)
     return csv_reader
 
-def get_today_prayers(file_name):
+def get_today_prayers(file_name, date_format):
     # get today's prayer times
     today = datetime.now()
-    today_str = today.strftime('%m/%d/%Y')
+    today_str = today.strftime(date_format)
     for row in read_csv_data(file_name):
-        row_date = datetime.strptime(row['Date'], '%m/%d/%Y')
-        row_date_str = row_date.strftime('%m/%d/%Y')
+        row_date = datetime.strptime(row['Date'], date_format)
+        row_date_str = row_date.strftime(date_format)
         if row_date_str == today_str:
             return row
     raise Exception(f'No prayer times found for {today_str}')
 
-def parse_time(time_str):
+def parse_time(time_str, time_format):
     # parse prayer time string to datetime object
-    return datetime.strptime(time_str, "%I:%M %p")
+    return datetime.strptime(time_str, time_format)
 
 def get_prayers_header(file_name):
     for row in read_csv_data(file_name):
         return row
 
-def extract_prayer_times(prayer_times, prayers_header):
+def extract_prayer_times(prayer_times, prayers_header, time_format):
     # extract prayer times from csv row
-    return {key: parse_time(prayer_times[header]) \
+    return {key: parse_time(prayer_times[header], time_format) \
         for key, header in prayers_header.items()}
 
-def get_thresholds(file_name):
+def get_thresholds(file_name, time_format):
     # get thresholds from csv file
     ret = dict()
     for row in read_csv_data(file_name):
         ret[row['prayer']] = {
             'before': int(row['before']) if row['before'] else None,
             'after': int(row['after']) if row['after'] else None,
-            'jumaa': parse_time(row['jumaa']) if row['jumaa'] else None
+            'jumaa': parse_time(row['jumaa'], time_format) if row['jumaa'] else None
         }
     return ret
 
@@ -91,15 +91,17 @@ def main():
     load_dotenv()
     # read full csv file to get prayer times for today
     file_name = environ['FULL_CSV_URL']
-    prayers_row = get_today_prayers(file_name)
+    date_format = environ.get('DATE_FORMAT', '%m/%d/%Y')
+    prayers_row = get_today_prayers(file_name, date_format)
     # read prayer header definitions from csv file
     file_name = environ['HEADER_CSV_URL']
     prayers_header = get_prayers_header(file_name)
     # extract prayer times
-    prayer_times = extract_prayer_times(prayers_row, prayers_header)
+    time_format = environ.get('TIME_FORMAT', '%I:%M %p')
+    prayer_times = extract_prayer_times(prayers_row, prayers_header, time_format)
     # read before/after thresholds
     file_name = environ['THRESHOLDS_CSV_URL']
-    thresholds = get_thresholds(file_name)
+    thresholds = get_thresholds(file_name, time_format)
     # add Jumaah (in case today is Friday)
     add_jumaah(prayer_times, thresholds)
     # print prayer times

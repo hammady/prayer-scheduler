@@ -31,7 +31,8 @@ For a list of all timezones, see: https://en.wikipedia.org/wiki/List_of_tz_datab
 
 Environment variables can be stored in `.env` which will be loaded automatically.
 All defaults for the below environment variables can be found in this file.
-The format of the environment variables is: File path (file://) or URL (https://).
+The format of the first three environment variables is: File path (file://) or URL (https://).
+Date/time formats can be found [here](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior).
 
 1. `FULL_CSV_URL`: Main CSV file to load.
 This CSV should have all year timetable as rows, with the five prayer times as columns.
@@ -44,6 +45,8 @@ with the following column names in the header:
     1. before (minutes before the iqama time of the prayer to trigger the before hooks)
     1. after (minutes after the iqama time of the prayer to trigger the after hooks)
     1. jumaa (if the prayer is juma'a, the jumaa time)
+1. `DATE_FORMAT`: Date format to use when reading from the CSV files.
+1. `TIME_FORMAT`: Time format to use when reading from the CSV files.
 ## Run
 
 ```bash
