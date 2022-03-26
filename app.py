@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 def read_csv_data(file_name):
     print(f'Reading CSV file at: {file_name}')
     csv_data = urlopen(file_name).readlines()
-    csv_data = [line.decode('utf-8') for line in csv_data]
+    csv_data = [line.decode('utf-8-sig') for line in csv_data] # utf-8-sig removes BOM
     csv_reader = DictReader(csv_data)
     return csv_reader
 
@@ -30,15 +30,14 @@ def parse_time(time_str):
     # parse prayer time string to datetime object
     return datetime.strptime(time_str, "%I:%M %p")
 
-def extract_prayer_times(prayer_times):
+def get_prayers_header(file_name):
+    for row in read_csv_data(file_name):
+        return row
+
+def extract_prayer_times(prayer_times, prayers_header):
     # extract prayer times from csv row
-    return {
-        'fajr': parse_time(prayer_times['Fajr Iqaamah 1']),
-        'dhuhr': parse_time(prayer_times['Zhuhr Iqaamah']),
-        'asr': parse_time(prayer_times['\'Asr Iqaamah']),
-        'maghrib': parse_time(prayer_times['Maghrib']),
-        'isha': parse_time(prayer_times['Ishaa Iqaamah 1'])
-    }
+    return {key: parse_time(prayer_times[header]) \
+        for key, header in prayers_header.items()}
 
 def get_thresholds(file_name):
     # get thresholds from csv file
@@ -90,12 +89,14 @@ def add_cron_jobs(cron, prayer_times, thresholds, before_command, after_command)
 def main():
     # load environment variables from .env file
     load_dotenv()
-    # read full csv file
+    # read full csv file to get prayer times for today
     file_name = environ['FULL_CSV_URL']
-    # get prayer times for today
     prayers_row = get_today_prayers(file_name)
+    # read prayer header definitions from csv file
+    file_name = environ['HEADER_CSV_URL']
+    prayers_header = get_prayers_header(file_name)
     # extract prayer times
-    prayer_times = extract_prayer_times(prayers_row)
+    prayer_times = extract_prayer_times(prayers_row, prayers_header)
     # read before/after thresholds
     file_name = environ['THRESHOLDS_CSV_URL']
     thresholds = get_thresholds(file_name)
