@@ -47,6 +47,8 @@ with the following column names in the header:
     1. jumaa (if the prayer is juma'a, the jumaa time)
 1. `DATE_FORMAT`: Date format to use when reading from the CSV files.
 1. `TIME_FORMAT`: Time format to use when reading from the CSV files.
+1. `CSV_REQUESTER_USER_AGENT`: User agent to use when requesting the CSV files (optional).
+Default: `Python-urllib/3.8` (where 3.8 is the version of Python used to build the container).
 ## Run
 
 ```bash
