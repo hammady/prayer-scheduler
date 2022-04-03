@@ -11,5 +11,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Sleeping forever to allow cron to run..."
-sleep infinity
+echo "Watching log file..."
+f=/var/log/app.log
+touch $f && chmod a+w $f && tail -f $f

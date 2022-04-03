@@ -22,6 +22,7 @@ def get_today_prayers(file_name, date_format, user_agent):
     # get today's prayer times
     today = datetime.now()
     today_str = today.strftime(date_format)
+    print(f'Today: {today_str}')
     for row in read_csv_data(file_name, user_agent):
         row_date = datetime.strptime(row['Date'], date_format)
         row_date_str = row_date.strftime(date_format)
@@ -119,7 +120,7 @@ def main():
     )
 
     # add a final crontab at 3:00 AM to run this script again
-    job = cron.new(command="cd /home/prayertimes && /usr/local/bin/python ./app.py")
+    job = cron.new(command="cd /home/prayertimes && /usr/local/bin/python ./app.py >> /var/log/app.log 2>&1")
     job.hour.on(3)
     job.minute.on(0)
 
