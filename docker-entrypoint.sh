@@ -3,6 +3,9 @@
 # start the cron service
 service cron start
 
+# capture environment variables for cronjobs
+env >> /home/$CRON_USER/.env
+
 # run the command
 $@
 

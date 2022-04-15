@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 function try_butt_command() {
-  server_ip=192.168.1.73
-  server_port=1256
+  server_ip=$BUTT_SERVER_IP
+  server_port=$BUTT_SERVER_PORT
   binary_path=/usr/local/bin/butt-client
   allowed_timeout=3s
 

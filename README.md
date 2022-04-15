@@ -29,8 +29,9 @@ For a list of all timezones, see: https://en.wikipedia.org/wiki/List_of_tz_datab
 
 ## Configure
 
-Environment variables can be stored in `.env` which will be loaded automatically.
-All defaults for the below environment variables can be found in this file.
+All defaults for the below environment variables can be found in `.env`.
+They can be overriden by passing values to the `docker run` command below.
+
 The format of the first three environment variables is: File path (file://) or URL (https://).
 Date/time formats can be found [here](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior).
 
@@ -49,12 +50,23 @@ with the following column names in the header:
 1. `TIME_FORMAT`: Time format to use when reading from the CSV files.
 1. `CSV_REQUESTER_USER_AGENT`: User agent to use when requesting the CSV files (optional).
 Default: `Python-urllib/3.8` (where 3.8 is the version of Python used to build the container).
+1. `BUTT_SERVER_IP`: IP address of the BUTT server.
+1. `BUTT_SERVER_PORT`: Port of the BUTT server.
+
 ## Run
 
 ```bash
 docker run -d \
     --name=prayer-scheduler \
     --restart always \
+    -e FULL_CSV_URL=file:///home/prayertimes/prayers-timetable.csv \
+    -e HEADER_CSV_URL=file:///home/prayertimes/prayers-header.csv \
+    -e THRESHOLDS_CSV_URL=file:///home/prayertimes/thresholds.csv \
+    -e DATE_FORMAT=%m/%d/%Y \
+    -e TIME_FORMAT="%I:%M %p" \
+    -e CSV_REQUESTER_USER_AGENT= \
+    -e BUTT_SERVER_IP= \
+    -e BUTT_SERVER_PORT=1256 \
     prayer-scheduler:1
 ```
 

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
+base=$(dirname $0)
+
 (
+  # load environment variables from $base/.env
+  export $(cat $base/.env | xargs)
+
   if [ $# -ne 2 ]; then
     echo "USAGE: $0 <before|after> <prayer-name>"
     exit 1
