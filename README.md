@@ -1,5 +1,7 @@
 # prayer-scheduler
 
+[![Docker](https://github.com/hammady/prayer-scheduler/workflows/Docker/badge.svg)](https://github.com/hammady/prayer-scheduler/actions/workflows/docker-build-push.yml)
+
 Run arbitrary scripts based on prayer times loaded from CSV file.
 All scripts located in `before-hooks.d`/`after-hooks.d` will be executed
 before/after the prayer Iqama times by a configurable threshold.
@@ -10,7 +12,9 @@ in the `hooks-config.d` directory. These will be sourced by the application.
 The current hooks send BUTT commands to set the stream title.
 They also enable stream signal detection (in the before hook) and disable it (in the after hook).
 
-## Build
+## Development
+
+### Build
 
 ```bash
 docker build . -t prayer-scheduler:1
@@ -27,7 +31,7 @@ Time zones are important for the prayer times to be correct.
 All times in the CSV files are assumed to match the same time zone.
 For a list of all timezones, see: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
-## Configure
+### Configure
 
 All defaults for the below environment variables can be found in `.env`.
 They can be overriden by passing values to the `docker run` command below.
@@ -53,7 +57,7 @@ Default: `Python-urllib/3.8` (where 3.8 is the version of Python used to build t
 1. `BUTT_SERVER_IP`: IP address of the BUTT server.
 1. `BUTT_SERVER_PORT`: Port of the BUTT server.
 
-## Run
+### Run
 
 ```bash
 docker run -d \
@@ -69,6 +73,12 @@ docker run -d \
     -e BUTT_SERVER_PORT=1256 \
     prayer-scheduler:1
 ```
+
+## Production
+
+GitHub actions are configured to build and push a docker image.
+Visit [the package page](https://github.com/hammady/prayer-scheduler/pkgs/container/prayer-scheduler)
+for more information.
 
 ## Health Check
 
