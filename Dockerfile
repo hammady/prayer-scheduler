@@ -8,9 +8,7 @@ ENV CRON_USER prayertimes
 
 RUN apt update && \
     apt install -y cron && \
-    adduser --system ${CRON_USER} && \
-    mv /etc/localtime /etc/localtime.old && \
-    ln -s /usr/share/zoneinfo/Canada/Eastern /etc/localtime
+    adduser --system ${CRON_USER}
 
 WORKDIR /home/${CRON_USER}
 

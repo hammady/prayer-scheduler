@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# set timezone
+if [ ! -z "$CRON_TIMEZONE" ]; then
+  ln -sf /usr/share/zoneinfo/$CRON_TIMEZONE /etc/localtime
+fi
+
 # start the cron service
 service cron start
 

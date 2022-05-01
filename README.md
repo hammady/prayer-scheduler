@@ -20,17 +20,6 @@ They also enable stream signal detection (in the before hook) and disable it (in
 docker build . -t prayer-scheduler:1
 ```
 
-Default time zone is set to `Canada/Eastern`. It can be overriden by supplying
-a build argument to the docker build:
-
-```bash
-docker build . --build-arg TIMEZONE=America/New_York -t prayer-scheduler:1
-```
-
-Time zones are important for the prayer times to be correct.
-All times in the CSV files are assumed to match the same time zone.
-For a list of all timezones, see: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-
 ### Configure
 
 All defaults for the below environment variables can be found in `.env`.
@@ -56,6 +45,10 @@ with the following column names in the header:
 Default: `Python-urllib/3.8` (where 3.8 is the version of Python used to build the container).
 1. `BUTT_SERVER_IP`: IP address of the BUTT server.
 1. `BUTT_SERVER_PORT`: Port of the BUTT server.
+1. `CRON_TIMEZONE`: Time zone to use when scheduling cron jobs. Time zones are important for the
+prayer times to be correct. All times in the CSV files are assumed to match the same time zone.
+For a list of all timezones, see: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+Default: UTC.
 
 ### Run
 
@@ -71,6 +64,7 @@ docker run -d \
     -e CSV_REQUESTER_USER_AGENT= \
     -e BUTT_SERVER_IP= \
     -e BUTT_SERVER_PORT=1256 \
+    -e CRON_TIMEZONE=Canada/Eastern \
     prayer-scheduler:1
 ```
 
